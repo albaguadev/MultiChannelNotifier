@@ -1,6 +1,8 @@
 package main.java.com.notifier;
 
 import main.java.com.notifier.context.NotificationContext;
+import main.java.com.notifier.factory.NotificationStrategyFactory;
+import main.java.com.notifier.model.NotificationType;
 import main.java.com.notifier.strategy.EmailStrategy;
 import main.java.com.notifier.strategy.SmsStrategy;
 
@@ -9,12 +11,11 @@ public class Main {
 
         NotificationContext context = new NotificationContext();
 
-        context.setStrategy(new EmailStrategy());
+        context.setStrategy(NotificationStrategyFactory.getStrategy(NotificationType.EMAIL));
         context.executeStrategy("aguadoalbert@gmail.com ha escrito esto");
 
-        context.setStrategy(new SmsStrategy());
+        context.setStrategy(NotificationStrategyFactory.getStrategy(NotificationType.SMS));
         context.executeStrategy("1567 ha escrito esto");
-
 
     }
 }
