@@ -1,4 +1,4 @@
-package main.java.com.notifier.model;
+package com.notifier.model;
 
 public enum NotificationType {
     EMAIL, SMS;

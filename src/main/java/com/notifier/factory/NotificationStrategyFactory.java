@@ -1,9 +1,9 @@
-package main.java.com.notifier.factory;
+package com.notifier.factory;
 
-import main.java.com.notifier.model.NotificationType;
-import main.java.com.notifier.strategy.EmailStrategy;
-import main.java.com.notifier.strategy.NotificationStrategy;
-import main.java.com.notifier.strategy.SmsStrategy;
+import com.notifier.model.NotificationType;
+import com.notifier.strategy.EmailStrategy;
+import com.notifier.strategy.NotificationStrategy;
+import com.notifier.strategy.SmsStrategy;
 
 public class NotificationStrategyFactory {
 

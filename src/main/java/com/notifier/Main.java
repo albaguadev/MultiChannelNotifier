@@ -1,10 +1,8 @@
-package main.java.com.notifier;
+package com.notifier;
 
-import main.java.com.notifier.context.NotificationContext;
-import main.java.com.notifier.factory.NotificationStrategyFactory;
-import main.java.com.notifier.model.NotificationType;
-import main.java.com.notifier.strategy.EmailStrategy;
-import main.java.com.notifier.strategy.SmsStrategy;
+import com.notifier.context.NotificationContext;
+import com.notifier.factory.NotificationStrategyFactory;
+import com.notifier.model.NotificationType;
 
 public class Main {
     public static void main(String[] args) {
