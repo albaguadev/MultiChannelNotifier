@@ -1,6 +1,6 @@
-package main.java.com.notifier.context;
+package com.notifier.context;
 
-import main.java.com.notifier.strategy.NotificationStrategy;
+import com.notifier.strategy.NotificationStrategy;
 
 public class NotificationContext {
     private NotificationStrategy strategy;

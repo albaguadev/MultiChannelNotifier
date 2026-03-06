@@ -1,20 +1,22 @@
-package main.java.com.notifier;
+package com.notifier;
 
-import main.java.com.notifier.context.NotificationContext;
-import main.java.com.notifier.strategy.EmailStrategy;
-import main.java.com.notifier.strategy.SmsStrategy;
+import com.notifier.context.NotificationContext;
+import com.notifier.factory.NotificationStrategyFactory;
+import com.notifier.model.NotificationType;
 
 public class Main {
     public static void main(String[] args) {
 
         NotificationContext context = new NotificationContext();
 
-        context.setStrategy(new EmailStrategy());
-        context.executeStrategy("aguadoalbert@gmail.com ha escrito esto");
+        context.setStrategy(NotificationStrategyFactory.getStrategy(NotificationType.EMAIL));
+        context.executeStrategy("fake@gmail.com ha escrito esto");
 
-        context.setStrategy(new SmsStrategy());
+        context.setStrategy(NotificationStrategyFactory.getStrategy(NotificationType.SMS));
         context.executeStrategy("1567 ha escrito esto");
 
+        context.setStrategy(NotificationStrategyFactory.getStrategy(NotificationType.WHATSAPP));
+        context.executeStrategy("telefonillo ha escrito esto");
 
     }
 }

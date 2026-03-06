@@ -1,4 +1,4 @@
-package main.java.com.notifier.strategy;
+package com.notifier.strategy;
 
 public class EmailStrategy implements NotificationStrategy {
 
