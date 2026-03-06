@@ -10,10 +10,13 @@ public class Main {
         NotificationContext context = new NotificationContext();
 
         context.setStrategy(NotificationStrategyFactory.getStrategy(NotificationType.EMAIL));
-        context.executeStrategy("aguadoalbert@gmail.com ha escrito esto");
+        context.executeStrategy("fake@gmail.com ha escrito esto");
 
         context.setStrategy(NotificationStrategyFactory.getStrategy(NotificationType.SMS));
         context.executeStrategy("1567 ha escrito esto");
+
+        context.setStrategy(NotificationStrategyFactory.getStrategy(NotificationType.WHATSAPP));
+        context.executeStrategy("telefonillo ha escrito esto");
 
     }
 }

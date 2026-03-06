@@ -1,5 +1,5 @@
 package com.notifier.model;
 
 public enum NotificationType {
-    EMAIL, SMS;
+    EMAIL, SMS, WHATSAPP;
 }
