@@ -22,4 +22,47 @@ public class NotificationContextTest {
         assertDoesNotThrow(() -> context.executeStrategy("Test message"));
     }
 
+    @Test
+    @DisplayName("Should throw exception for null string")
+    void setNullStringInExecuteCommand() {
+
+            NotificationContext context = new NotificationContext();
+
+            NotificationStrategy email = NotificationStrategyFactory.getStrategy(NotificationType.EMAIL);
+
+            context.setStrategy(email);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            context.executeStrategy(null);
+        });
+    }
+
+    @Test
+    @DisplayName("Should throw exception for empty string")
+    void setEmptyStringInExecuteCommand() {
+
+        NotificationContext context = new NotificationContext();
+
+        NotificationStrategy email = NotificationStrategyFactory.getStrategy(NotificationType.EMAIL);
+
+        context.setStrategy(email);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            context.executeStrategy("");
+        });
+    }
+
+    @Test
+    @DisplayName("Should throw exception for null strategy")
+    void setNullStrategyAfterOfExecuteCommand() {
+
+        NotificationContext context = new NotificationContext();
+
+        context.setStrategy(null);
+
+        assertThrows(IllegalStateException.class, () -> {
+            context.executeStrategy("message");
+        });
+    }
+
 }

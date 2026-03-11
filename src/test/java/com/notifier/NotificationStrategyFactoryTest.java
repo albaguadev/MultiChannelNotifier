@@ -35,8 +35,8 @@ public class NotificationStrategyFactoryTest {
 
     @Test
     @DisplayName("Should throw exception for null notification type")
-    void shouldThrowExceptionOnNullType() {
-        assertThrows(NullPointerException.class, () -> {
+    void shouldThrowExceptionOnIllegalArgumentType() {
+        assertThrows(IllegalArgumentException.class, () -> {
             NotificationStrategyFactory.getStrategy(null);
         });
     }
