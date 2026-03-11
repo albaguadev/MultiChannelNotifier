@@ -23,6 +23,10 @@ public class NotificationStrategyFactory {
      */
     public static NotificationStrategy getStrategy(NotificationType type) {
 
+        if (type == null) {
+            throw new IllegalArgumentException("Message error: Cannot send a null notification type.");
+        }
+
         return switch (type) {
             case EMAIL -> new EmailStrategy();
 
