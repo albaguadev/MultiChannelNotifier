@@ -28,6 +28,14 @@ public class NotificationContext {
      * @throws IllegalArgumentException if the message is null or empty.
      */
     public void executeStrategy(String message) {
+        if (this.strategy == null) {
+            throw new IllegalStateException("Context error: No notification strategy has been configured.");
+        }
+
+        if (message == null || message.isBlank()) {
+            throw new IllegalArgumentException("Message error: Cannot send a null or empty notification.");
+        }
+
         strategy.send(message);
     }
 }
