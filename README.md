@@ -36,3 +36,10 @@ The source code is organized following standard Java package conventions:
 1. Clone the repository.
 2. Navigate to src/main/java/com/notifier/Main.java.
 3. Run the main method to see the factory and strategy integration in action.
+
+## Documentation
+This project uses **Javadoc** for technical documentation.
+
+To generate the latest documentation report, run:
+```bash
+mvn javadoc:javadoc
