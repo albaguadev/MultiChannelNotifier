@@ -5,14 +5,16 @@ import com.notifier.strategy.EmailStrategy;
 import com.notifier.strategy.NotificationStrategy;
 import com.notifier.strategy.SmsStrategy;
 import com.notifier.strategy.WhatsAppStrategy;
+import org.springframework.stereotype.Component;
 
 /**
- * Main factory class for creating {@link NotificationStrategy} instances.
+ * MultiChannelNotifierApplication factory class for creating {@link NotificationStrategy} instances.
  * <p>
  * This class eliminates the need for the client to manually instantiate
  * specific strategies like {@link EmailStrategy} or {@link SmsStrategy}.
  * </p>
  */
+@Component
 public class NotificationStrategyFactory {
 
     /**
@@ -21,7 +23,7 @@ public class NotificationStrategyFactory {
      * @return A concrete instance of {@link NotificationStrategy}.
      * @throws IllegalArgumentException if the provided type is null or unsupported.
      */
-    public static NotificationStrategy getStrategy(NotificationType type) {
+    public NotificationStrategy getStrategy(NotificationType type) {
 
         if (type == null) {
             throw new IllegalArgumentException("Message error: Cannot send a null notification type.");
