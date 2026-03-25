@@ -1,6 +1,7 @@
 package com.notifier.controller;
 
 import com.notifier.dto.NotificationRequest;
+import com.notifier.service.NotificationService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/notifications")
 public class NotificationController {
 
+    private final NotificationService notificationService;
+
+    public NotificationController(NotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
+
     /**
      * Notification requests are processed via this POST endpoint.
      * Data integrity is verified through the @Valid annotation before execution.
@@ -28,8 +35,7 @@ public class NotificationController {
         // Logically, the service layer is invoked at this stage.
         // Currently, a placeholder response is returned to confirm connectivity.
 
-        String responseMessage = String.format("Notification of type %s is being processed for %s",
-                request.getType(), request.getRecipient());
+        notificationService.sendNotification(request);
 
         return ResponseEntity.ok(responseMessage);
     }
