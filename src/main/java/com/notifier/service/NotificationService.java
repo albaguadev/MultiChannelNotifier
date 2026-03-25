@@ -31,10 +31,7 @@ public class NotificationService {
      * @param request The validated notification payload containing type and content.
      */
     public void sendNotification(NotificationRequest request) {
-        // The specific strategy is resolved based on the notification type.
         NotificationStrategy strategy = factory.getStrategy(request.getType());
-
-        // The delivery operation is executed using the provided message content.
         strategy.send(request.getMessage());
     }
 }

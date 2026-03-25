@@ -37,6 +37,6 @@ public class NotificationController {
 
         notificationService.sendNotification(request);
 
-        return ResponseEntity.ok(responseMessage);
+        return ResponseEntity.ok("Notification processed successfully");
     }
 }
