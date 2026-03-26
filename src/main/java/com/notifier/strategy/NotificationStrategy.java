@@ -1,5 +1,7 @@
 package com.notifier.strategy;
 
+import com.notifier.model.NotificationType;
+
 /**
  * Common interface for all notification delivery algorithms.
  * This interface defines the contract that every specific provider
@@ -14,4 +16,10 @@ public interface NotificationStrategy {
      */
     void send(String message);
 
+    /**
+     * The specific {@link NotificationType} associated with the implementation is returned.
+     * This metadata is utilized by the factory for automated strategy resolution.
+     * * @return The unique identifier for the notification channel.
+     */
+    NotificationType getType();
 }
