@@ -5,7 +5,7 @@
  * It leverages Jakarta Bean Validation to enforce data integrity and Lombok
  * to minimize boilerplate code, ensuring a clean and consistent data contract.
  * </p>
- * @auhtor albaguadev
+ * @author albaguadev
  * @version 1.1.0-SNAPSHOT
  */
 package com.notifier.dto;

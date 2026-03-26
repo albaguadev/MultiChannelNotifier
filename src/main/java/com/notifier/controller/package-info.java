@@ -5,7 +5,7 @@
  * performing request validation via Jakarta Bean Validation, and delegating
  * business orchestration to the service layer.
  * </p>
- * @auhtor albaguadev
+ * @author albaguadev
  * @version 1.1.0-SNAPSHOT
  */
 package com.notifier.controller;
