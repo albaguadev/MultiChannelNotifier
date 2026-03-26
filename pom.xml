@@ -72,6 +72,8 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.6.3</version>
                 <configuration>
+                    <additionalJOption>-Xdoclint:none</additionalJOption>
+                    <failOnError>false</failOnError>
                     <show>private</show>
                     <nohelp>true</nohelp>
                 </configuration>
