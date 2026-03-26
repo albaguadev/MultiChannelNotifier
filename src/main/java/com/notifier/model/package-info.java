@@ -5,6 +5,6 @@
  * ensuring type safety for the different notification channels.
  * </p>
  * @auhtor albaguadev
- * @version 1.0-SNAPSHOT
+ * @version 1.1.0-SNAPSHOT
  */
 package com.notifier.model;
