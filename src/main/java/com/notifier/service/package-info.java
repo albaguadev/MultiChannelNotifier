@@ -7,4 +7,4 @@
  * @auhtor albaguadev
  * @version 1.0-SNAPSHOT
  */
-package com.notifier.context;
+package com.notifier.service;

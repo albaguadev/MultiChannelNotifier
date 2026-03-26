@@ -1,41 +1,43 @@
 package com.notifier.factory;
 
 import com.notifier.model.NotificationType;
-import com.notifier.strategy.EmailStrategy;
 import com.notifier.strategy.NotificationStrategy;
-import com.notifier.strategy.SmsStrategy;
-import com.notifier.strategy.WhatsAppStrategy;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 /**
- * MultiChannelNotifierApplication factory class for creating {@link NotificationStrategy} instances.
- * <p>
- * This class eliminates the need for the client to manually instantiate
- * specific strategies like {@link EmailStrategy} or {@link SmsStrategy}.
- * </p>
+ * Strategy resolution is managed dynamically through this factory component.
+ * All beans implementing the {@link NotificationStrategy} interface are
+ * automatically discovered and registered during application startup.
  */
 @Component
 public class NotificationStrategyFactory {
 
+    private final Map<NotificationType, NotificationStrategy> strategyMap;
+
     /**
-     * Factory method that returns a concrete strategy based on the type.
-     * * @param type The {@link NotificationType} requested by the user.
-     * @return A concrete instance of {@link NotificationStrategy}.
-     * @throws IllegalArgumentException if the provided type is null or unsupported.
+     * The strategy collection is injected via constructor and processed into a map.
+     * This mapping ensures O(1) retrieval performance based on the notification type.
+     * * @param strategies A collection of all managed beans implementing {@link NotificationStrategy}.
      */
-    public NotificationStrategy getStrategy(NotificationType type) {
-
-        if (type == null) {
-            throw new IllegalArgumentException("Message error: Cannot send a null notification type.");
-        }
-
-        return switch (type) {
-            case EMAIL -> new EmailStrategy();
-
-            case SMS -> new SmsStrategy();
-
-            case WHATSAPP -> new WhatsAppStrategy();
-        };
+    public NotificationStrategyFactory(List<NotificationStrategy> strategies) {
+        this.strategyMap = strategies.stream()
+                .collect(Collectors.toMap(NotificationStrategy::getType, Function.identity()));
     }
 
+    /**
+     * The appropriate delivery strategy is retrieved from the pre-populated map.
+     * * @param type The required notification type for message delivery.
+     * @return The specific strategy implementation corresponding to the type.
+     * @throws IllegalArgumentException if no implementation is found for the requested type.
+     */
+    public NotificationStrategy getStrategy(NotificationType type) {
+        return Optional.ofNullable(strategyMap.get(type))
+                .orElseThrow(() -> new IllegalArgumentException("No strategy implementation was found for: " + type));
+    }
 }
