@@ -1,0 +1,55 @@
+= Notifier API Service - Technical Documentation
+:toc: left
+:toclevels: 3
+:sectnums:
+:sectanchors:
+:source-highlighter: highlightjs
+
+// Información del Autor
+*Author:* albaguadev
+*Version:* 1.1.0-SNAPSHOT
+*Date:* 2026-03-27
+
+== Introduction
+This documentation provides a verified contract for the MultiChannel Notifier Service.
+As part of our **QA-First strategy**, every example shown below is automatically generated
+from real integration tests, ensuring 100% accuracy between code and documentation.
+
+---
+
+== Notification Endpoint
+The primary interface for dispatching messages across different channels (Email, SMS).
+
+=== Send Notification (Success)
+This scenario demonstrates a valid request with all mandatory fields correctly populated.
+
+.CURL Request
+include::{snippets}/notification-success/curl-request.adoc[]
+
+.HTTP Request Body
+include::{snippets}/notification-success/http-request.adoc[]
+
+.HTTP Response (200 OK)
+include::{snippets}/notification-success/http-response.adoc[]
+
+---
+
+=== Validation Errors (Bad Request)
+The API implements strict **Jakarta Bean Validation**. Below is an example of a 400 error
+when mandatory fields are missing or invalid.
+
+.HTTP Response (400 Bad Request)
+include::{snippets}/notification-error-validation/http-response.adoc[]
+
+---
+
+== Data Structures
+The following fields are required for a successful notification dispatch:
+
+|===
+|Field |Type |Description |Constraints
+
+|`type` |String |Channel to use (EMAIL, SMS) |Not Null / Must match Strategy
+|`recipient` |String |Target address or phone number |Not Blank
+|`message` |String |Content of the notification |Length (1-500)
+|===
