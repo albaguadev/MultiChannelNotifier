@@ -35,14 +35,12 @@ public class NotificationService {
      * @throws IllegalArgumentException if the message content is null or blank.
      */
     public void sendNotification(NotificationRequest request) {
-        // Validation logic previously held in the Context is now centralized here.
         Assert.notNull(request.getMessage(), "Message error: Notification content cannot be null.");
         Assert.hasText(request.getMessage(), "Message error: Cannot send an empty notification.");
 
-        // The appropriate strategy is retrieved from the factory based on the request type.
         NotificationStrategy strategy = factory.getStrategy(request.getType());
 
-        // The delivery logic is executed.
-        strategy.send(request.getMessage());
+        strategy.validate(request);
+        strategy.send(request);
     }
 }
