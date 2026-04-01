@@ -1,6 +1,7 @@
 package com.notifier.strategy;
 
 import com.notifier.dto.NotificationRequest;
+import com.notifier.exception.InvalidNotificationException;
 import com.notifier.model.NotificationType;
 
 /**
