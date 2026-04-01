@@ -20,9 +20,10 @@ public class GlobalExceptionHandler {
 
     /**
      * Logic errors and explicit illegal arguments are intercepted.
-     * * @param ex The intercepted exception.
+     *
+     * @param ex The intercepted exception.
      * @param request The metadata of the current web request.
-     * @return A formatted {@link ErrorMessage} with a 400 Bad Request status.
+     * @return A formatted {@link ResponseEntity} with a 400 Bad Request status.
      */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorMessage> handleIllegalArgument(IllegalArgumentException ex, WebRequest request) {
@@ -31,9 +32,10 @@ public class GlobalExceptionHandler {
 
     /**
      * JSON parsing errors, such as invalid Enum values, are intercepted here.
-     * * @param ex The deserialization exception.
+     *
+     * @param ex The deserialization exception.
      * @param request The metadata of the current web request.
-     * @return A formatted {@link ErrorMessage} explaining the JSON mapping failure.
+     * @return A formatted {@link ResponseEntity} explaining the JSON mapping failure.
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorMessage> handleInvalidJson(HttpMessageNotReadableException ex, WebRequest request) {
@@ -44,6 +46,10 @@ public class GlobalExceptionHandler {
     /**
      * Validation errors triggered by @Valid annotations are intercepted.
      * This collects all field errors into a single readable string.
+     *
+     * @param ex The validation exception containing binding results.
+     * @param request The metadata of the current web request.
+     * @return A formatted {@link ResponseEntity} with detailed field errors.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessage> handleValidationErrors(MethodArgumentNotValidException ex, WebRequest request) {
@@ -56,6 +62,10 @@ public class GlobalExceptionHandler {
 
     /**
      * Any unhandled internal exceptions are captured to prevent stack trace leakage.
+     *
+     * @param ex The generic exception.
+     * @param request The metadata of the current web request.
+     * @return A formatted {@link ResponseEntity} with a 500 Internal Server Error status.
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleGlobalException(Exception ex, WebRequest request) {
@@ -73,6 +83,11 @@ public class GlobalExceptionHandler {
 
     /**
      * Internal helper method to maintain a consistent response structure.
+     *
+     * @param status The HTTP status to return.
+     * @param message The error message to display.
+     * @param request The web request context.
+     * @return A wrapped {@link ErrorMessage} inside a {@link ResponseEntity}.
      */
     private ResponseEntity<ErrorMessage> buildResponse(HttpStatus status, String message, WebRequest request) {
         ErrorMessage error = new ErrorMessage(
