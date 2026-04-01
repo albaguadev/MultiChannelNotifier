@@ -26,8 +26,10 @@ public class NotificationStrategyFactory {
      * * @param strategies A collection of all managed beans implementing {@link NotificationStrategy}.
      */
     public NotificationStrategyFactory(List<NotificationStrategy> strategies) {
-        this.strategyMap = strategies.stream()
-                .collect(Collectors.toMap(NotificationStrategy::getType, Function.identity()));
+        this.strategyMap = Map.copyOf(
+                strategies.stream()
+                        .collect(Collectors.toMap(NotificationStrategy::getType, Function.identity()))
+        );
     }
 
     /**
