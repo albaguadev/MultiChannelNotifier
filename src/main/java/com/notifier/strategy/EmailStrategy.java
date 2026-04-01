@@ -1,6 +1,9 @@
 package com.notifier.strategy;
 
+import com.notifier.dto.NotificationRequest;
+import com.notifier.exception.InvalidNotificationException;
 import com.notifier.model.NotificationType;
+import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,11 +15,16 @@ public class EmailStrategy implements NotificationStrategy {
 
    /**
     * Sends a message through the Email channel.
-    * @param message The content to send.
+    * @param request The content to send.
     */
    @Override
-   public void send(String message) {
-      System.out.println("Sending Email: " + message);
+   public void send(NotificationRequest request) {
+
+      validate(request);
+
+      System.out.println("Executing Email Delivery to: " + request.getRecipient());
+      System.out.println("Subject: " + request.getSubject());
+      System.out.println("Body: " + request.getMessage());
    }
 
    /**
@@ -28,5 +36,13 @@ public class EmailStrategy implements NotificationStrategy {
    @Override
    public NotificationType getType() {
       return NotificationType.EMAIL;
+   }
+
+   @Override
+   public void validate(NotificationRequest request) {
+      EmailValidator validator = new EmailValidator();
+      if (!validator.isValid(request.getRecipient(), null)) {
+         throw new InvalidNotificationException("Invalid Email format: " + request.getRecipient());
+      }
    }
 }

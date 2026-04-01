@@ -1,5 +1,6 @@
 package com.notifier.strategy;
 
+import com.notifier.dto.NotificationRequest;
 import com.notifier.model.NotificationType;
 
 /**
@@ -12,9 +13,9 @@ public interface NotificationStrategy {
 
     /**
      * Executes the sending of a message.
-     * @param message The text content to be delivered.
+     * @param request The data to be delivered.
      */
-    void send(String message);
+    void send(NotificationRequest request);
 
     /**
      * The specific {@link NotificationType} associated with the implementation is returned.
@@ -22,4 +23,11 @@ public interface NotificationStrategy {
      * * @return The unique identifier for the notification channel.
      */
     NotificationType getType();
+
+    /**
+     * Validates the request according to the specific channel rules.
+     * @param request The full notification data.
+     * @throws InvalidNotificationException if the format is incorrect (e.g., invalid Email/SMS).
+     */
+    void validate(NotificationRequest request);
 }
