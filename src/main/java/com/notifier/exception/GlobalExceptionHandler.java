@@ -73,6 +73,15 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Strategy-level validation errors are intercepted here.
+     * This bridges the gap between Domain Logic failures and HTTP responses.
+     */
+    @ExceptionHandler(InvalidNotificationException.class)
+    public ResponseEntity<ErrorMessage> handleInvalidNotification(InvalidNotificationException ex, WebRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    /**
      * Internal helper method to maintain a consistent response structure.
      *
      * @param status The HTTP status to return.
