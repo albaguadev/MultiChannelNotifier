@@ -99,8 +99,8 @@ include::{snippets}/notification-error-invalid-keys/http-response.adoc[]
 ---
 
 === Resource Not Found
-// TODO: snippet pending fix of shouldReturnNotFoundForInvalidPath test (tracked in fix/test-404-handler branch)
-// include::{snippets}/notification-error-404/http-response.adoc[]
+.HTTP Response (404 Not Found)
+include::{snippets}/notification-error-404/http-response.adoc[]
 
 ---
 
