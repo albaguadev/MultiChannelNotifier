@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
@@ -70,6 +71,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleGlobalException(Exception ex, WebRequest request) {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected server error occurred.", request);
+    }
+
+    /**
+     * Requests to non-existent endpoints are intercepted here.
+     *
+     * @param ex The exception thrown when no handler is found for the request.
+     * @param request The metadata of the current web request.
+     * @return A formatted {@link ResponseEntity} with a 404 Not Found status.
+     */
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ErrorMessage> handleNoHandlerFound(NoHandlerFoundException ex, WebRequest request) {
+        return buildResponse(HttpStatus.NOT_FOUND, "No endpoint found for: " + ex.getRequestURL(), request);
     }
 
     /**
