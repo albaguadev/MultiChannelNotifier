@@ -30,7 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Technical documentation and integration testing for the Notification API.
  * This class ensures that the API contract is validated and documented
  * using Spring REST Docs.
- * * @author albaguadev
+ *
+ * @author albaguadev
  */
 @SpringBootTest
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
@@ -42,13 +43,15 @@ public class NotificationControllerTest {
 
     /**
      * Set up the MockMvc instance with REST Docs configuration before each test.
-     * * @param webApplicationContext The Spring application context.
+     *
+     * @param webApplicationContext The Spring application context.
      * @param restDocumentation The REST Docs provider.
      */
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(documentationConfiguration(restDocumentation))
+                .addDispatcherServletCustomizer(ds -> ds.setThrowExceptionIfNoHandlerFound(true))
                 .build();
     }
 
