@@ -18,7 +18,7 @@ from real integration tests, ensuring 100% accuracy between code and documentati
 ---
 
 == Notification Endpoint
-The primary interface for dispatching messages across different channels (Email, SMS).
+The primary interface for dispatching messages across different channels (Email, SMS, WhatsApp).
 
 === Send Notification (Success)
 This scenario demonstrates a valid request with all mandatory fields correctly populated.
@@ -34,22 +34,84 @@ include::{snippets}/notification-success/http-response.adoc[]
 
 ---
 
-=== Validation Errors (Bad Request)
-The API implements strict **Jakarta Bean Validation**. Below is an example of a 400 error
-when mandatory fields are missing or invalid.
+=== Send Notification with Optional Fields (Success)
+This scenario demonstrates a valid request including the optional `subject` field.
 
+.CURL Request
+include::{snippets}/notification-success-optional/curl-request.adoc[]
+
+.HTTP Request Body
+include::{snippets}/notification-success-optional/http-request.adoc[]
+
+.HTTP Response (200 OK)
+include::{snippets}/notification-success-optional/http-response.adoc[]
+
+---
+
+=== Validation Errors (Bad Request)
+The API implements strict **Jakarta Bean Validation**. Below are examples of 400 errors
+when mandatory fields are missing, null, or invalid.
+
+==== Null type field
 .HTTP Response (400 Bad Request)
-include::{snippets}/notification-error-validation/http-response.adoc[]
+include::{snippets}/notification-error-validation-null-type/http-response.adoc[]
+
+==== Empty type field
+.HTTP Response (400 Bad Request)
+include::{snippets}/notification-error-validation-empty-type/http-response.adoc[]
+
+==== Empty recipient field
+.HTTP Response (400 Bad Request)
+include::{snippets}/notification-error-validation-empty-recipient/http-response.adoc[]
+
+==== Null recipient field
+.HTTP Response (400 Bad Request)
+include::{snippets}/notification-error-validation-null-recipient/http-response.adoc[]
+
+==== Empty message field
+.HTTP Response (400 Bad Request)
+include::{snippets}/notification-error-validation-empty-message/http-response.adoc[]
+
+==== Null message field
+.HTTP Response (400 Bad Request)
+include::{snippets}/notification-error-validation-null-message/http-response.adoc[]
+
+==== All fields empty
+.HTTP Response (400 Bad Request)
+include::{snippets}/notification-error-validation-empty-fields-body/http-response.adoc[]
+
+==== All fields null
+.HTTP Response (400 Bad Request)
+include::{snippets}/notification-error-validation-null-fields-body/http-response.adoc[]
+
+---
+
+=== Invalid Email Format (Bad Request)
+.HTTP Response (400 Bad Request)
+include::{snippets}/notification-error-email-format/http-response.adoc[]
+
+---
+
+=== Invalid JSON Keys (Bad Request)
+.HTTP Response (400 Bad Request)
+include::{snippets}/notification-error-invalid-keys/http-response.adoc[]
+
+---
+
+=== Resource Not Found
+.HTTP Response (404 Not Found)
+include::{snippets}/notification-error-404/http-response.adoc[]
 
 ---
 
 == Data Structures
-The following fields are required for a successful notification dispatch:
+The following fields are accepted by the notification endpoint:
 
 |===
 |Field |Type |Description |Constraints
 
-|`type` |String |Channel to use (EMAIL, SMS) |Not Null / Must match Strategy
-|`recipient` |String |Target address or phone number |Not Blank
-|`message` |String |Content of the notification |Length (1-500)
+|`type`      |String |Channel to use (EMAIL, SMS, WHATSAPP) |Not Null / Must match a valid NotificationType
+|`recipient` |String |Target address or phone number        |Not Blank
+|`message`   |String |Content of the notification           |Not Blank
+|`subject`   |String |Subject line (used by Email channel)  |Optional
 |===
