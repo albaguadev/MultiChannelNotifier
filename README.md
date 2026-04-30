@@ -8,38 +8,56 @@ The primary goal of this project is to manage multiple notification channels (Em
 
 ## Design Patterns
 
-* Strategy Pattern: Encapsulates the specific logic for each notification provider. Each strategy implements a common interface, allowing the context to remain agnostic of the underlying implementation.
-* Factory Method: Centralizes object creation. The client code requests a strategy via an Enum, and the factory returns the appropriate instance, further reducing tight coupling.
+* **Strategy Pattern:** Encapsulates the specific logic for each notification provider. Each strategy implements a common interface, allowing the context to remain agnostic of the underlying implementation.
+* **Factory Pattern:** Centralizes strategy resolution. All beans implementing `NotificationStrategy` are automatically discovered by Spring and registered in a map at startup, enabling O(1) retrieval by `NotificationType`.
 
 ## Project Structure
 
 The source code is organized following standard Java package conventions:
 
-* com.notifier.strategy: Interface definitions and concrete provider implementations.
-* com.notifier.factory: Factory logic and the NotificationType enumeration.
-* com.notifier.context: Context class that manages strategy execution.
-* com.notifier: Application entry point.
+* `com.notifier.strategy` — Interface definitions and concrete provider implementations (Email, SMS, WhatsApp).
+* `com.notifier.factory` — Factory logic responsible for strategy resolution.
+* `com.notifier.service` — Business logic orchestration between the controller and the strategy layer.
+* `com.notifier.controller` — REST API entry point.
+* `com.notifier.dto` — Data Transfer Objects with validation constraints.
+* `com.notifier.model` — Core enumerations (`NotificationType`).
+* `com.notifier.exception` — Centralized exception handling and error response structures.
 
 ## Key Technical Features
 
-* Open/Closed Principle: Adding a new provider only requires creating a new strategy class and updating the factory mapping.
-* Type Safety: Implementation of Java Enums to handle provider selection, eliminating string-based errors.
-* Stateless Factory: A static factory implementation using modern Java switch expressions for efficient object retrieval.
+* **Open/Closed Principle:** Adding a new provider only requires creating a new class implementing `NotificationStrategy`. No existing code needs to be modified.
+* **Type Safety:** `NotificationType` enum is used for provider selection, eliminating string-based errors.
+* **Spring-managed Factory:** Strategy instances are injected by Spring and stored in an immutable map, ensuring thread-safe and efficient resolution at runtime.
+* **Centralized Error Handling:** A `@RestControllerAdvice` component intercepts all exceptions and returns consistent JSON error responses.
 
 ## Requirements
 
-* Java 21 or higher.
-* Git for version control.
+* Java 21 or higher
+* Maven 3.8 or higher
+* Git for version control
 
-## Usage
+## Running the Application
 
-1. Clone the repository.
-2. Navigate to src/main/java/com/notifier/Main.java.
-3. Run the main method to see the factory and strategy integration in action.
+```bash
+mvn spring-boot:run
+```
+
+The server starts on port `8081` by default (configurable in `application.properties`).
+
+## Running the Tests
+
+```bash
+mvn test
+```
+
+Tests are written with JUnit 5 and Spring REST Docs. Running them also generates API documentation snippets under `target/generated-snippets/`.
 
 ## Documentation
-This project uses **Javadoc** for technical documentation.
 
-To generate the latest documentation report, run:
+This project uses **Javadoc** for technical documentation and **Spring REST Docs** for API documentation.
+
+To generate the Javadoc report, run:
+
 ```bash
 mvn javadoc:javadoc
+```

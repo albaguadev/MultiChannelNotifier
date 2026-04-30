@@ -15,6 +15,12 @@ public class EmailStrategy implements NotificationStrategy {
 
    /**
     * Sends a message through the Email channel.
+    * <p>
+    * Note: this method internally calls {@link #validate(NotificationRequest)} before
+    * dispatching. When invoked through the standard service flow, validation will
+    * have already been performed by {@code NotificationService}; the internal call
+    * here acts as a safeguard for direct strategy usage.
+    * </p>
     * @param request The content to send.
     */
    @Override
