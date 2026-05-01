@@ -46,7 +46,13 @@ public class NotificationRecord {
     private final Instant timestamp;
 
     /**
-     * Private all-args constructor used exclusively by the factory methods.
+     * Package-private all-args constructor used by factory methods and infrastructure adapters.
+     * <p>
+     * This constructor is intentionally not public to discourage direct instantiation from
+     * application code. Domain objects should be created via the factory methods
+     * {@link #ofSuccess} and {@link #ofFailure}, while infrastructure adapters (e.g. JPA)
+     * may use this constructor for reconstitution from persistent storage.
+     * </p>
      *
      * @param id           unique record identifier
      * @param type         notification delivery channel
@@ -57,7 +63,7 @@ public class NotificationRecord {
      * @param errorMessage error description (may be {@code null})
      * @param timestamp    creation instant
      */
-    private NotificationRecord(String id,
+    public NotificationRecord(String id,
                                 NotificationType type,
                                 String recipient,
                                 String message,

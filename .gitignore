@@ -31,5 +31,8 @@ bin/
 ### jqwik ###
 .jqwik-database
 
+### H2 Database ###
+/data/
+
 ### Compiled Archives ###
 *.class
