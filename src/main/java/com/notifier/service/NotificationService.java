@@ -69,7 +69,10 @@ public class NotificationService {
             strategy.send(request);
             record = NotificationRecord.ofSuccess(request);
         } catch (RuntimeException e) {
-            record = NotificationRecord.ofFailure(request, e.getMessage());
+            String errorMessage = e.getMessage() != null 
+                ? e.getMessage() 
+                : "Unknown error: " + e.getClass().getSimpleName();
+            record = NotificationRecord.ofFailure(request, errorMessage);
             throw e;
         } finally {
             if (record != null) {
