@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.time.LocalDateTime;
@@ -92,6 +93,35 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidNotificationException.class)
     public ResponseEntity<ErrorMessage> handleInvalidNotification(InvalidNotificationException ex, WebRequest request) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    /**
+     * Errors from the persistence layer are intercepted here.
+     * Returns HTTP 503 to indicate that the service is temporarily unable
+     * to retrieve notification records due to an infrastructure failure.
+     *
+     * @param ex      The persistence exception thrown by the query layer.
+     * @param request The metadata of the current web request.
+     * @return A formatted {@link ResponseEntity} with a 503 Service Unavailable status.
+     */
+    @ExceptionHandler(PersistenceException.class)
+    public ResponseEntity<ErrorMessage> handlePersistenceException(PersistenceException ex, WebRequest request) {
+        return buildResponse(HttpStatus.SERVICE_UNAVAILABLE, "Error al recuperar los registros de notificación", request);
+    }
+
+    /**
+     * Type mismatch errors for request parameters are intercepted here.
+     * This occurs when a query parameter cannot be converted to the expected type
+     * (e.g., an invalid enum value is passed for {@code type} or {@code status}).
+     *
+     * @param ex      The type mismatch exception containing the parameter name and invalid value.
+     * @param request The metadata of the current web request.
+     * @return A formatted {@link ResponseEntity} with a 400 Bad Request status and a descriptive message.
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorMessage> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex, WebRequest request) {
+        String message = String.format("Valor no reconocido para el parámetro '%s': %s", ex.getName(), ex.getValue());
+        return buildResponse(HttpStatus.BAD_REQUEST, message, request);
     }
 
     /**
