@@ -1,5 +1,7 @@
 package com.notifier.controller;
 
+import com.notifier.model.NotificationRecord;
+import com.notifier.port.PersistencePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -17,6 +20,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.util.stream.Stream;
 
@@ -41,6 +47,9 @@ public class NotificationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    private PersistencePort persistencePort;
+
     /**
      * Set up the MockMvc instance with REST Docs configuration before each test.
      *
@@ -49,6 +58,7 @@ public class NotificationControllerTest {
      */
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
+        when(persistencePort.save(any(NotificationRecord.class))).thenAnswer(inv -> inv.getArgument(0));
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(documentationConfiguration(restDocumentation))
                 .addDispatcherServletCustomizer(ds -> ds.setThrowExceptionIfNoHandlerFound(true))

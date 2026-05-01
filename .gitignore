@@ -28,5 +28,8 @@ bin/
 ### Kiro ###
 .kiro/
 
+### jqwik ###
+.jqwik-database
+
 ### Compiled Archives ###
 *.class
