@@ -3,17 +3,17 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: notifier-postgres
+    container_name: multichannel-notifier-postgres
     environment:
-      POSTGRES_DB: notifier
-      POSTGRES_USER: notifier
-      POSTGRES_PASSWORD: notifier
+      POSTGRES_DB: notifier_db
+      POSTGRES_USER: notifier_user
+      POSTGRES_PASSWORD: notifier_pass
     ports:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U notifier"]
+      test: ["CMD-SHELL", "pg_isready -U notifier_user"]
       interval: 10s
       timeout: 5s
       retries: 5

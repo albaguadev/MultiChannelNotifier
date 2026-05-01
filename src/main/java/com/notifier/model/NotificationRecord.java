@@ -46,12 +46,12 @@ public class NotificationRecord {
     private final Instant timestamp;
 
     /**
-     * Package-private all-args constructor used by factory methods and infrastructure adapters.
+     * All-args constructor used by factory methods and infrastructure adapters.
      * <p>
-     * This constructor is intentionally not public to discourage direct instantiation from
-     * application code. Domain objects should be created via the factory methods
-     * {@link #ofSuccess} and {@link #ofFailure}, while infrastructure adapters (e.g. JPA)
-     * may use this constructor for reconstitution from persistent storage.
+     * This constructor is public to allow infrastructure adapters (e.g. JPA, serialization
+     * frameworks) to reconstitute domain objects from persistent storage. However, application
+     * code should prefer the factory methods {@link #ofSuccess} and {@link #ofFailure} for
+     * creating new instances, as they enforce domain invariants and generate proper identifiers.
      * </p>
      *
      * @param id           unique record identifier
