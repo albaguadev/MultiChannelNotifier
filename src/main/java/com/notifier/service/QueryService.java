@@ -52,7 +52,7 @@ public class QueryService {
      * @return a list of all notification records, or an empty list if none exist
      * @throws PersistenceException if the underlying storage layer throws an exception
      */
-    public List<NotificationRecord> findAll() {
+    private List<NotificationRecord> findAll() {
         try {
             List<NotificationRecord> result = persistencePort.findAll();
             return result != null ? result : Collections.emptyList();
@@ -74,7 +74,7 @@ public class QueryService {
      * @return a list of records with the specified type, or an empty list if none match
      * @throws PersistenceException if the underlying storage layer throws an exception
      */
-    public List<NotificationRecord> findByType(NotificationType type) {
+    private List<NotificationRecord> findByType(NotificationType type) {
         try {
             List<NotificationRecord> result = persistencePort.findByType(type);
             return result != null ? result : Collections.emptyList();
@@ -97,7 +97,7 @@ public class QueryService {
      * @return a list of records with the specified status, or an empty list if none match
      * @throws PersistenceException if the underlying storage layer throws an exception
      */
-    public List<NotificationRecord> findByStatus(NotificationStatus status) {
+    private List<NotificationRecord> findByStatus(NotificationStatus status) {
         try {
             List<NotificationRecord> result = persistencePort.findByStatus(status);
             return result != null ? result : Collections.emptyList();
@@ -107,6 +107,28 @@ public class QueryService {
             throw new PersistenceException(
                     "Failed to retrieve notification records by status: " + status, e);
         }
+    }
+
+    /**
+     * Dispatches a query based on the provided optional filters, applying the following
+     * priority: date range &gt; type &gt; status &gt; no filter (return all).
+     * <p>
+     * This method centralises the dispatch logic so that the controller layer remains
+     * a pure HTTP adapter with no conditional branching.
+     * </p>
+     *
+     * @param type   optional delivery channel filter; may be {@code null}
+     * @param status optional delivery outcome filter; may be {@code null}
+     * @param from   optional start of the time range (inclusive); may be {@code null}
+     * @param to     optional end of the time range (inclusive); may be {@code null}
+     * @return a list of matching records, or an empty list if none match
+     * @throws PersistenceException if the underlying storage layer throws an exception
+     */
+    public List<NotificationRecord> query(NotificationType type, NotificationStatus status, Instant from, Instant to) {
+        if (from != null && to != null) return findByDateRange(from, to);
+        if (type != null)               return findByType(type);
+        if (status != null)             return findByStatus(status);
+        return findAll();
     }
 
     /**
@@ -122,7 +144,7 @@ public class QueryService {
      * @return a list of records whose timestamp is within {@code [from, to]}, or an empty list if none match
      * @throws PersistenceException if the underlying storage layer throws an exception
      */
-    public List<NotificationRecord> findByDateRange(Instant from, Instant to) {
+    private List<NotificationRecord> findByDateRange(Instant from, Instant to) {
         try {
             List<NotificationRecord> result = persistencePort.findByTimestampBetween(from, to);
             return result != null ? result : Collections.emptyList();

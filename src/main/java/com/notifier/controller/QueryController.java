@@ -18,17 +18,9 @@ import java.util.List;
  * REST controller that exposes query endpoints for persisted notification records.
  * <p>
  * All endpoints are mounted under {@code /api/v1/notifications}. The single
- * {@code GET} endpoint supports optional filtering by type, status, or date range.
- * When no filter parameters are provided, all records are returned.
+ * {@code GET} endpoint delegates all dispatch logic to {@link QueryService#query},
+ * keeping this controller as a pure HTTP adapter.
  * </p>
- *
- * <p>Dispatch priority (first matching condition wins):</p>
- * <ol>
- *   <li>Both {@code from} and {@code to} present → filter by date range</li>
- *   <li>{@code type} present → filter by notification type</li>
- *   <li>{@code status} present → filter by notification status</li>
- *   <li>No parameters → return all records</li>
- * </ol>
  */
 @RestController
 @RequestMapping("/api/v1/notifications")
@@ -48,8 +40,8 @@ public class QueryController {
     /**
      * Retrieves notification records, optionally filtered by type, status, or date range.
      * <p>
-     * All parameters are optional. When both {@code from} and {@code to} are provided,
-     * the date-range filter takes precedence over {@code type} and {@code status}.
+     * All parameters are optional. Dispatch priority is delegated to
+     * {@link QueryService#query}: date range &gt; type &gt; status &gt; all records.
      * An empty list is returned when no records match the given criteria.
      * </p>
      *
@@ -66,25 +58,9 @@ public class QueryController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant to) {
 
-        List<NotificationRecordResponse> response;
-
-        if (from != null && to != null) {
-            response = queryService.findByDateRange(from, to).stream()
-                    .map(NotificationRecordResponse::from)
-                    .toList();
-        } else if (type != null) {
-            response = queryService.findByType(type).stream()
-                    .map(NotificationRecordResponse::from)
-                    .toList();
-        } else if (status != null) {
-            response = queryService.findByStatus(status).stream()
-                    .map(NotificationRecordResponse::from)
-                    .toList();
-        } else {
-            response = queryService.findAll().stream()
-                    .map(NotificationRecordResponse::from)
-                    .toList();
-        }
+        List<NotificationRecordResponse> response = queryService.query(type, status, from, to).stream()
+                .map(NotificationRecordResponse::from)
+                .toList();
 
         return ResponseEntity.ok(response);
     }
