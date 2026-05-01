@@ -44,6 +44,30 @@ public class QueryService {
     }
 
     /**
+     * Dispatches a query based on the provided optional filters, applying the following
+     * priority: date range &gt; type &gt; status &gt; no filter (return all).
+     * <p>
+     * This method centralises the dispatch logic so that the controller layer remains
+     * a pure HTTP adapter with no conditional branching.
+     * </p>
+     *
+     * @param type   optional delivery channel filter; may be {@code null}
+     * @param status optional delivery outcome filter; may be {@code null}
+     * @param from   optional start of the time range (inclusive); may be {@code null}
+     * @param to     optional end of the time range (inclusive); may be {@code null}
+     * @return a list of matching records, or an empty list if none match
+     * @throws PersistenceException if the underlying storage layer throws an exception
+     */
+    public List<NotificationRecord> query(NotificationType type, NotificationStatus status, Instant from, Instant to) {
+        if (from != null && to != null) return findByDateRange(from, to);
+        if (type != null)               return findByType(type);
+        if (status != null)             return findByStatus(status);
+        return findAll();
+    }
+
+    // ============ Private helper methods ============
+
+    /**
      * Retrieves all persisted {@link NotificationRecord} instances.
      * <p>
      * Returns an empty list when no records exist. Never returns {@code null}.
@@ -107,28 +131,6 @@ public class QueryService {
             throw new PersistenceException(
                     "Failed to retrieve notification records by status: " + status, e);
         }
-    }
-
-    /**
-     * Dispatches a query based on the provided optional filters, applying the following
-     * priority: date range &gt; type &gt; status &gt; no filter (return all).
-     * <p>
-     * This method centralises the dispatch logic so that the controller layer remains
-     * a pure HTTP adapter with no conditional branching.
-     * </p>
-     *
-     * @param type   optional delivery channel filter; may be {@code null}
-     * @param status optional delivery outcome filter; may be {@code null}
-     * @param from   optional start of the time range (inclusive); may be {@code null}
-     * @param to     optional end of the time range (inclusive); may be {@code null}
-     * @return a list of matching records, or an empty list if none match
-     * @throws PersistenceException if the underlying storage layer throws an exception
-     */
-    public List<NotificationRecord> query(NotificationType type, NotificationStatus status, Instant from, Instant to) {
-        if (from != null && to != null) return findByDateRange(from, to);
-        if (type != null)               return findByType(type);
-        if (status != null)             return findByStatus(status);
-        return findAll();
     }
 
     /**
