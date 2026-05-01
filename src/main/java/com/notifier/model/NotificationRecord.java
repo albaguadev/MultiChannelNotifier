@@ -112,6 +112,12 @@ public class NotificationRecord {
      * {@link NotificationStatus#FAILED}, the provided error message, and a
      * timestamp equal to {@link Instant#now()} at the moment of invocation.
      * </p>
+     * <p>
+     * <strong>Note:</strong> While this method accepts {@code null} for {@code errorMessage}
+     * to maintain flexibility, callers should provide a meaningful error description whenever
+     * possible. {@link NotificationService} guarantees a non-null message by using a default
+     * when the exception message is unavailable.
+     * </p>
      *
      * @param request      the original notification request; must not be {@code null}
      * @param errorMessage a human-readable description of the failure cause; may be {@code null}
