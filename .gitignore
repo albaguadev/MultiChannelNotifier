@@ -25,5 +25,8 @@ bin/
 ### Mac OS ###
 .DS_Store
 
+### Kiro ###
+.kiro/
+
 ### Compiled Archives ###
 *.class
