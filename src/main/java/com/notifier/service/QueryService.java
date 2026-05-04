@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service responsible for querying persisted {@link NotificationRecord} instances.
@@ -68,18 +70,25 @@ public class QueryService {
     // ============ Private helper methods ============
 
     /**
-     * Retrieves all persisted {@link NotificationRecord} instances.
+     * Retrieves all persisted {@link NotificationRecord} instances, ordered by timestamp
+     * in descending order (most recent first).
      * <p>
      * Returns an empty list when no records exist. Never returns {@code null}.
      * </p>
      *
-     * @return a list of all notification records, or an empty list if none exist
+     * @return a list of all notification records ordered by timestamp descending, or an empty list if none exist
      * @throws PersistenceException if the underlying storage layer throws an exception
      */
     private List<NotificationRecord> findAll() {
         try {
             List<NotificationRecord> result = persistencePort.findAll();
-            return result != null ? result : Collections.emptyList();
+            if (result == null || result.isEmpty()) {
+                return Collections.emptyList();
+            }
+            // Sort by timestamp descending (most recent first)
+            return result.stream()
+                    .sorted(Comparator.comparing(NotificationRecord::getTimestamp).reversed())
+                    .collect(Collectors.toList());
         } catch (PersistenceException e) {
             throw e;
         } catch (Exception e) {
