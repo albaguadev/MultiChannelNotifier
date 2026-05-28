@@ -1,6 +1,8 @@
 package com.notifier.controller;
 
+import com.notifier.dto.NotificationRecordResponse;
 import com.notifier.dto.NotificationRequest;
+import com.notifier.model.NotificationRecord;
 import com.notifier.service.NotificationService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -28,15 +30,15 @@ public class NotificationController {
      * Data integrity is verified through the @Valid annotation before execution.
      *
      * @param request The validated notification payload.
-     * @return A status message indicating the request has been received.
+     * @return The persisted notification record as a JSON response.
      */
     @PostMapping
-    public ResponseEntity<String> sendNotification(@Valid @RequestBody NotificationRequest request) {
+    public ResponseEntity<NotificationRecordResponse> sendNotification(@Valid @RequestBody NotificationRequest request) {
         // Logically, the service layer is invoked at this stage.
-        // Currently, a placeholder response is returned to confirm connectivity.
+        // The service returns the persisted notification record.
 
-        notificationService.sendNotification(request);
-
-        return ResponseEntity.ok("Notification processed successfully");
+        NotificationRecord record = notificationService.sendNotification(request);
+        NotificationRecordResponse response = NotificationRecordResponse.from(record);
+        return ResponseEntity.ok(response);
     }
 }
