@@ -54,10 +54,11 @@ public class NotificationService {
      * </p>
      *
      * @param request The validated notification payload containing type and content.
+     * @return The {@link NotificationRecord} created from the delivery attempt (success or failure).
      * @throws IllegalArgumentException if the message content is null or blank.
      * @throws RuntimeException         if the underlying strategy throws during validation or sending.
      */
-    public void sendNotification(NotificationRequest request) {
+    public NotificationRecord sendNotification(NotificationRequest request) {
         Assert.notNull(request.getMessage(), "Message error: Notification content cannot be null.");
         Assert.hasText(request.getMessage(), "Message error: Cannot send an empty notification.");
 
@@ -79,6 +80,7 @@ public class NotificationService {
                 persistSafely(record);
             }
         }
+        return record;
     }
 
     /**
